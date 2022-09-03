@@ -1,0 +1,27 @@
+extends layout 
+
+block content
+    h1 Register for an account
+    form(action="", method="post") 
+        div 
+            label(for="name") First Name:
+            input(type="text" id="name" name="name" required="true" value=(user === undefined ? "" : user.name)) 
+        div 
+            label(for="lastname") Last Name:
+            input(type="text" id="lastname" name='lastname' required="true" value=(user === undefined ? "" : user.lastname))
+        div 
+            label(for="username") Username:
+            input(type="text" placeholder="Username or email" id="username" name="username" required="true" value=(user === undefined ? "" : user.username))
+        div 
+            label(for="password") Password:
+            input(type="text" id="password" name="password" required="true" value=(user === undefined ? "" : user.password))
+        div 
+            label(for="confirm-password") Confirm Password:
+            input(type="text" id="confirm-password" name="confirmPassword" required="true" value=(user === undefined ? "" : user.confirmPassword))
+        div 
+            button(type="submit") Register
+    if(errors)
+        for error in errors 
+            li= error.msg
+    p Already have an account well 
+        a(href="/catalog/signin") Sign in 

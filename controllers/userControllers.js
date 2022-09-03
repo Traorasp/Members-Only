@@ -1,12 +1,61 @@
 const User = require('../models/User');
 
+const {body, validationResult} = require('express-validator');
+
 exports.register_get = (req, res) => {
- res.send('Not implemented');
+ res.render('register');
 };
 
-exports.register_post = (req, res) => {
-    res.send('Not implemented');
-};
+exports.register_post = [
+    body('name', "Name cannot be empty")
+        .trim()
+        .isLength({min:1})
+        .isAlpha()
+        .withMessage('Name must be alphabet letters')
+        .escape(),
+    body('lastname', "Last name cannot be empty")
+        .trim()
+        .isLength({min:1})
+        .isAlpha()
+        .withMessage('Last name must be alphabet letters')
+        .escape(),
+    body('username', "Username cannot be empty")
+        .trim()
+        .isLength({min:1})
+        .escape(),
+    body('password', "Password cannot be empty")
+        .trim()
+        .isLength({min:1})
+        .escape(),
+    body('confirmPassword')
+        .trim()
+        .isLength({min:1})
+        .escape()
+        .custom((value, {req}) => value === req.body.password)
+        .withMessage("Confirm password must be same as Password"),
+    (req, res, next) => {
+            const errors = validationResult(req);
+
+            if(!errors.isEmpty()) {
+                res.render('register', {user: req.body, errors: errors.array()});
+                return;
+            }
+
+            const user = new User({
+                name: req.body.name,
+                lastname: req.body.lastname,
+                username: req.body.username,
+                password: req.body.password,
+            });
+
+            user.save((err) => {
+                if(err) {
+                    return next(err);
+                }
+                res.redirect('/catalog/posts');
+            });
+        }
+];
 
 exports.sign_in_get = (req, res) => {
     res.send('Not implemented');

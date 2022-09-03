@@ -30,18 +30,18 @@ router.post('/member', userControllers.update_status_post);
 /// Post Routes ///
 
 // GET request for all posts
-router.get('posts', postControllers.load_posts);
+router.get('/posts', postControllers.load_posts);
 
 // GET request for creating post
-router.get('create', postControllers.create_posts_get);
+router.get('/create', postControllers.create_posts_get);
 
 // POST request for creating post
-router.post('create', postControllers.create_posts_post);
+router.post('/create', postControllers.create_posts_post);
 
 // GET request for deleting post
-router.get('delete', postControllers.delete_posts_get);
+router.get('/delete', postControllers.delete_posts_get);
 
 // POST request for deleting post
-router.post('delete', postControllers.delete_posts_post);
+router.post('/delete', postControllers.delete_posts_post);
 
 module.exports = router;
