@@ -43,3 +43,5 @@ router.get('delete', postControllers.delete_posts_get);
 
 // POST request for deleting post
 router.post('delete', postControllers.delete_posts_post);
+
+module.exports = router;

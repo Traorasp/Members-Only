@@ -1,6 +1,6 @@
-const mongoose = require('moongose');
+const mongoose = require('mongoose');
 
-const Schema = moongose.Schema;
+const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
     name: {type: String, required: true},
@@ -11,7 +11,7 @@ const userSchema = new Schema({
     isadmin: {type: Boolean, required: true}, 
 });
 
-userSchema.vistual('fullName')
+userSchema.virtual('fullName')
 .get(function() {
     return this.name + " " + this.lastname;
 })
