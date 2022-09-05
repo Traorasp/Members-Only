@@ -3,22 +3,72 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const passport = require('passport');
+const session = require('express-session');
+const LocalStrategy = require('passport-local').Strategy;
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-dotenv.config();
+const bcyrpt = require('bcryptjs');
 
+// Initializes express
+var app = express();
+
+//  Gets routes
 var indexRouter = require('./routes/index');
 var catalog = require('./routes/catalog');
 
+// Initializes dote env
+dotenv.config();
+
+// Initializes and setsup passport and localstratrgy.
+passport.use( 
+  new LocalStrategy((username, password, done) => {
+    User.findOne({ username: username}, (err, user) => {
+      if (err) {
+        return done(err);
+      }
+      if(!user) {
+        return done(null, false, { message: "Incorrect username"});
+      }
+      bcrypt.compare(password, user.passport, (err, res) => {
+        if(res) {
+          return done(null, user);
+        } else {
+          return done(null, false, {message: 'Incorrect password'})
+        }
+      })
+    });
+  })
+);
+
+passport.serializeUser(function(user,done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
+
+// Connects to database
 mongoose.connect(process.env.mongoUri, {useNewUrlParser:true, useUnifiedTopology:true});
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoSB connection error:"));
 
-var app = express();
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+app.use(session({secret: "cats", resave: false, saveUninitialized: true}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(express.urlencoded({extended: false}));
 
 app.use(logger('dev'));
 app.use(express.json());

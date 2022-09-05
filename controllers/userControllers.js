@@ -1,5 +1,6 @@
 const User = require('../models/User');
 
+const bcrypt = require('bcryptjs')
 const {body, validationResult} = require('express-validator');
 
 exports.register_get = (req, res) => {
@@ -41,19 +42,25 @@ exports.register_post = [
                 return;
             }
 
-            const user = new User({
-                name: req.body.name,
-                lastname: req.body.lastname,
-                username: req.body.username,
-                password: req.body.password,
-            });
-
-            user.save((err) => {
+            bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
                 if(err) {
                     return next(err);
                 }
-                res.redirect('/catalog/posts');
-            });
+
+                const user = new User({
+                    name: req.body.name,
+                    lastname: req.body.lastname,
+                    username: req.body.username,
+                    password: hashedPassword,
+                });
+    
+                user.save((err) => {
+                    if(err) {
+                        return next(err);
+                    }
+                    res.redirect('/catalog/posts');
+                });
+            })
         }
 ];
 
