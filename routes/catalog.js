@@ -20,6 +20,9 @@ router.get('/signin', userControllers.sign_in_get);
 // POST request for signing in
 router.post('/signin', userControllers.sign_in_post);
 
+// POST request for signing out
+router.post('/signout', userControllers.sign_out_post);
+
 // GET request for updating status
 router.get('/member', userControllers.update_status_get);
 

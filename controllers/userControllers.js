@@ -75,6 +75,15 @@ exports.sign_in_post =
         failureRedirect: "/catalog/signin"
     });
 
+exports.sign_out_post = (req, res) => {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/catalog/signin');
+    })
+}
+
 exports.update_status_get = (req, res) => {
     res.send('Not implemented');
 };
