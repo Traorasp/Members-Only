@@ -8,10 +8,8 @@ const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
-const bcyrpt = require('bcryptjs');
-
-// Initializes express
-var app = express();
+const bcrypt = require('bcryptjs');
+const User = require('./models/User');
 
 //  Gets routes
 var indexRouter = require('./routes/index');
@@ -30,7 +28,7 @@ passport.use(
       if(!user) {
         return done(null, false, { message: "Incorrect username"});
       }
-      bcrypt.compare(password, user.passport, (err, res) => {
+      bcrypt.compare(password, user.password, (err, res) => {
         if(res) {
           return done(null, user);
         } else {
@@ -50,6 +48,9 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
+
+// Initializes express
+var app = express();
 
 app.use(function(req, res, next) {
   res.locals.currentUser = req.user;

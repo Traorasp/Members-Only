@@ -1,0 +1,19 @@
+currentUser
+extends layout 
+
+block content
+    h1 Sign in
+    form(action="", method="post") 
+        div 
+            label(for="username") Username:
+            input(type="text" placeholder="Username or email" id="username" name="username" required="true" value=(currentUser === undefined ? "" : currentUser.username))
+        div 
+            label(for="password") Password:
+            input(type="text" id="password" name="password" required="true" value=(currentUser === undefined ? "" : currentUser.password))
+        div 
+            button(type="submit") Sign in
+    if(errors)
+        for error in errors 
+            li= error.msg
+    p Don't have an account well 
+        a(href="/catalog/") register 

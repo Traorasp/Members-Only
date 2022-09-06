@@ -2,6 +2,7 @@ const User = require('../models/User');
 
 const bcrypt = require('bcryptjs')
 const {body, validationResult} = require('express-validator');
+const passport = require('passport');
 
 exports.register_get = (req, res) => {
  res.render('register');
@@ -65,12 +66,14 @@ exports.register_post = [
 ];
 
 exports.sign_in_get = (req, res) => {
-    res.send('Not implemented');
+    res.render('login')
 };
 
-exports.sign_in_post = (req, res) => {
-    res.send('Not implemented');
-};
+exports.sign_in_post = 
+    passport.authenticate("local", {
+        successRedirect: "/catalog/posts",
+        failureRedirect: "/catalog/signin"
+    });
 
 exports.update_status_get = (req, res) => {
     res.send('Not implemented');
