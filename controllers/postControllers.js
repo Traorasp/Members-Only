@@ -8,7 +8,7 @@ exports.load_posts = (req, res) => {
         return;
     }
     Post.find()
-    .sort({"date" : -1})
+    .sort({"_id" : -1})
     .populate('author')
     .exec(function(err, posts) {
         if(err) {return next(err);}
@@ -44,6 +44,7 @@ exports.create_posts_post = [
             title: req.body.title,
             author: res.locals.currentUser._id,
             message: req.body.message,
+            date: Date.now(),
         })
         console.log(post)
         post.save((err) => {
