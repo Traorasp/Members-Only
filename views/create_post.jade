@@ -1,0 +1,16 @@
+extends layout 
+
+block content
+    h1 Create new post
+    form(action="", method="post") 
+        div 
+            label(for="title") Title: 
+            input(type="text" name='title' id='title' required='true' value=(post === undefined ? "" : post.title))
+        div 
+            label(for="message") Message: 
+            textarea(name="message", cols="50", rows="5") #{post === undefined ? "" : post.title} 
+        div 
+            button(type="submit") Publish 
+    if(errors)
+        for error in errors 
+            li= error.msg
