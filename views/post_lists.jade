@@ -6,15 +6,26 @@ block content
         h2 
             form(action="/catalog/signout", method="post") 
                 button(type="submit") Sign out
+        h2 
+            if(!currentUser.ismember)
+                a(href="/catalog/member") Become a member 
+            else if(!currentUser.isadmin)
+                a(href="/catalog/member") Become an admin 
+            else 
+                p You're an admin
     div 
         h1 List of posts
         h2 
             a(href="/catalog/create")  Create Post
         for post in posts 
             li   
+                if(currentUser.isadmin)
+                    form(action="/catalog/delete", method="post")
+                        input(type="hidden", name="id" value=(post._id))
+                        button(type="submit") Delete 
                 h3= post.title
                 if currentUser.ismember
-                    p By: #{post.author}
-                    p Date: #{post.date}
+                    p By: #{post.author.username}
+                    p Date: #{post.organizedDate}
                 p= post.message
 

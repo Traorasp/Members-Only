@@ -85,10 +85,45 @@ exports.sign_out_post = (req, res) => {
 }
 
 exports.update_status_get = (req, res) => {
-    res.send('Not implemented');
+    if(res.locals.currentUser === undefined) {
+        res.redirect('/catalog/signin');
+        return;
+    }
+    res.render('update_status');
 };
 
-exports.update_status_post = (req, res) => {
-    res.send('Not implemented');
-};
+exports.update_status_post = [
+    body("keycode", "Must input a keycode")
+        .trim()
+        .isLength({min:1})
+        .escape(),
+    (req, res, next) => {
+        const errors = validationResult(req);
 
+        if(!errors.isEmpty()) {
+            res.render('update_status', {errors: errors.array()});
+            return;
+        }
+
+        const keycode = req.body.keycode;
+        const isMember = keycode === process.env.memberKey ? true : keycode === process.env.adminKey ? true : false;
+        const isAdmin = keycode === process.env.adminKey;
+
+        const user = new User({
+            name: res.locals.currentUser.name,
+            lastname: res.locals.currentUser.lastname,
+            username: res.locals.currentUser.username,
+            password: res.locals.currentUser.password,
+            ismember: isMember,
+            isadmin: isAdmin,
+            _id: res.locals.currentUser._id,
+        });
+
+        User.findByIdAndUpdate(res.locals.currentUser._id, user, {}, (err, theuser) => {
+            if(err) {
+                return next(err);
+            }
+            res.redirect("/catalog/posts")
+        })
+    }
+]

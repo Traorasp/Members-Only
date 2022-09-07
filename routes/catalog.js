@@ -41,9 +41,6 @@ router.get('/create', postControllers.create_posts_get);
 // POST request for creating post
 router.post('/create', postControllers.create_posts_post);
 
-// GET request for deleting post
-router.get('/delete', postControllers.delete_posts_get);
-
 // POST request for deleting post
 router.post('/delete', postControllers.delete_posts_post);
 

@@ -1,0 +1,14 @@
+extends layout 
+
+block content
+    h1 Update Status 
+    form(action="", method="post") 
+        div     
+            label(for="keycode") Keycode:
+            input(type="text" name="keycode" id="keycode") 
+        div
+            button(type="submit") Submit
+        if(errors)
+            for error in errors 
+                li= error.msg
+    

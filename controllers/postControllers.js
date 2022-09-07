@@ -39,14 +39,14 @@ exports.create_posts_post = [
             res.render('create_post', {post: req.body, errors: errors.array()})
             return;
         }
-        console.log(res.locals.currentUser._id)
+
         const post = new Post({
             title: req.body.title,
             author: res.locals.currentUser._id,
             message: req.body.message,
             date: Date.now(),
         })
-        console.log(post)
+
         post.save((err) => {
             if(err) {
                 return next(err);
@@ -56,10 +56,9 @@ exports.create_posts_post = [
     }
 ]
 
-exports.delete_posts_get = (req, res) => {
-    res.send('Not implemented');
-};
-
 exports.delete_posts_post = (req, res) => {
-    res.send('Not implemented');
+    Post.findByIdAndRemove(req.body.id, (err) => {
+        if(err){return next(err);}
+        res.redirect('/catalog/posts');
+    })
 };
